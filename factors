@@ -1,0 +1,58 @@
+#!/usr/bin/python3
+import sys
+import math
+
+def smallest_prime(n):
+    """
+    Find the smallest prime factor of a given number n.
+
+    Parameters:
+    - n (int): The number to find the smallest prime factor for.
+
+    Returns:
+    - int: The smallest prime factor of n.
+    """
+    if n % 2 == 0:
+        return 2
+    for i in range(3, math.isqrt(n) + 1, 2):
+        if n % i == 0:
+            return i
+    return n
+
+def factorize(n):
+    """
+    Factorize a number n into two smaller numbers.
+
+    Parameters:
+    - n (int): The number to factorize.
+
+    Returns:
+    - tuple: A tuple containing two factors of n.
+    """
+    p = smallest_prime(n)
+    return p, n // p
+
+def main():
+    """
+    Main function to read input file and print factorizations.
+
+    Usage:
+    $ factors <file>
+
+    Where <file> is a file containing natural numbers to factor.
+    One number per line. The file will always end with a new line.
+
+    Output format: n=p*q, one factorization per line.
+    """
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    with open(sys.argv[1], 'r') as file:
+        for line in file:
+            n = int(line)
+            p, q = factorize(n)
+            print(f"{n}={p}*{q}")
+
+if __name__ == "__main__":
+    main()
