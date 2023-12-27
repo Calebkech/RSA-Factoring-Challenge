@@ -39,21 +39,29 @@ def main():
         sys.exit(1)
 
     if not os.path.isfile(sys.argv[1]):
-        print("Error: File not found.")
+        print(f"Error: File '{os.path.abspath(sys.argv[1])}' not found.")
         sys.exit(1)
 
-    with open(sys.argv[1], 'r') as file:
-        for line in file:
-            line = line.strip()
-            if not line.isdigit():
-                print(f"Error: Invalid number '{line}'.")
-                continue
-            n = int(line)
-            if n <= 1:
-                print(f"Error: Number must be greater than 1, got {n}.")
-                continue
-            p, q = factorize(n)
-            print(f"{n}={p}*{q}")
+    try:
+        with open(sys.argv[1], 'r') as file:
+            for line_number, line in enumerate(file, start=1):
+                line = line.strip()
+                if not line.isdigit():
+                    print(f"Error: Invalid number '{line}' on line {line_number}.")
+                    continue
+                n = int(line)
+                if n <= 1:
+                    print(f"Error: Number must be greater than 1, got {n} on line {line_number}.")
+                    continue
+                p, q = factorize(n)
+                print(f"{n}={p}*{q}")
+    except FileNotFoundError:
+        print(f"Error: File '{os.path.abspath(sys.argv[1])}' not found.")
+    except PermissionError:
+        print(f"Error: Permission denied for file '{os.path.abspath(sys.argv[1])}'.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
